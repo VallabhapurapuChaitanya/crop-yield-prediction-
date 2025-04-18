@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile - Crop Yield Prediction{% endblock %}
+
+{% block content %}
+
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Crop Yield Prediction System</h1>
+            <p>Predict crop yields based on environmental factors and agricultural practices</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Left side - Form -->
+            <div class="form-container">
+                <h2>Input Parameters</h2>
+                <form id="prediction-form">
+                    <div class="form-group">
+                        <label for="area">Area/Country:</label>
+                        <select id="area" name="area" required>
+                            <option value="" disabled selected>Select a country</option>
+                            {% for area in areas %}
+                            <option value="{{ area }}">{{ area }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="item">Crop Type:</label>
+                        <select id="item" name="item" required>
+                            <option value="" disabled selected>Select a crop</option>
+                            {% for crop in crops %}
+                            <option value="{{ crop }}">{{ crop }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label for="year">Year:</label>
+                            <input type="number" name="year" min="1990" max="2100" required>
+
+                        </div>
+
+                        <div class="form-group half">
+                            <label for="rainfall">Average Rainfall (mm/year):</label>
+                            <input type="number" id="rainfall" name="rainfall" min="50" max="3500" step="0.1" value="800" required>
+                            <span class="input-range">Range: 50-3500 mm</span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label for="pesticides">Pesticide Usage (tonnes):</label>
+                            <input type="number" id="pesticides" name="pesticides" min="0" max="1000000" value="50000" required>
+                        </div>
+
+                        <div class="form-group half">
+                            <label for="avg_temp">Average Temperature (°C):</label>
+                            <input type="number" id="avg_temp" name="avg_temp" min="1" max="40" step="0.1" value="20" required>
+                            <span class="input-range">Range: 1-40°C</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="predict-btn">Predict Yield</button>
+                </form>
+            </div>
+
+            <!-- Right side - Results -->
+            <div class="results-container">
+                <div id="loading" style="display: none;">
+                    <div class="loader"></div>
+                    <p>Calculating prediction...</p>
+                </div>
+
+                <div id="results" style="display: none;">
+                    <h2>Prediction Results</h2>
+
+                    <div class="prediction-box">
+                        <div class="prediction-header">Predicted Crop Yield</div>
+                        <div class="prediction-value">
+                            <span id="yield-value">0</span>
+                            <span class="unit">hg/ha</span>
+                            <p style="font-size:10px;color:#95a5a6;">(hectogram per hectare yield)</p>
+                        </div>
+                        <div class="prediction-tonnes">
+                            <span id="yield-tonnes">0</span>
+                            <span class="unit">tonnes/ha</span>
+                            <span id="tonnes-acres">0</span>
+                            <span class="unit">tonnes/acres</span>
+                        </div>
+                    </div>
+
+                    <div class="suggestions-section">
+                        <h3>Optimization Recommendations</h3>
+                        <div class="suggestions-box">
+                            <ul id="suggestions-list">
+                                <!-- Suggestions will be added here dynamically -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom section for confidence graph -->
+        <div id="confidence-container" style="display: none;">
+            <h2>Prediction Confidence</h2>
+            <div class="confidence-section">
+                <div class="confidence-graph">
+                    <img id="confidence-img" src="" alt="Confidence graph">
+                </div>
+                <div class="confidence-explanation">
+                    <p>This graph shows the confidence level of our prediction based on the input parameters and historical data patterns.</p>
+                    <ul>
+                        <li><span class="confidence-high"></span> High confidence (0.75-1.0): Strong historical correlation with input parameters</li>
+                        <li><span class="confidence-medium"></span> Medium confidence (0.5-0.75): Moderate historical correlation</li>
+                        <li><span class="confidence-low"></span> Low confidence (0-0.5): Limited historical data or weak correlation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Form validation
+            function validateForm() {
+                var isValid = true;
+                var rainfall = parseFloat($('#rainfall').val());
+                var avgTemp = parseFloat($('#avg_temp').val());
+
+                if (rainfall < 50 || rainfall > 3500) {
+                    alert('Average rainfall must be between 50 and 3500 mm.');
+                    isValid = false;
+                }
+
+                if (avgTemp < 1 || avgTemp > 40) {
+                    alert('Average temperature must be between 1 and 40°C.');
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
+            $('#prediction-form').on('submit', function(e) {
+                e.preventDefault();
+
+                if (!validateForm()) {
+                    return;
+                }
+
+                // Show loading indicator
+                $('#results').hide();
+                $('#confidence-container').hide();
+                $('#loading').show();
+
+                // Collect form data
+                var formData = $(this).serialize();
+
+                // Send AJAX request
+                $.ajax({
+                    url: '/predict',
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        // Update results
+                        $('#yield-value').text(response.yield);
+                        $('#yield-tonnes').text(response.yield_tonnes);
+                        $('#tonnes-acres').text(response.tonnes_acres);
+
+                        // Update confidence graph
+                        $('#confidence-img').attr('src', 'data:image/png;base64,' + response.confidence_graph);
+
+                        // Clear and update suggestions
+                        $('#suggestions-list').empty();
+                        response.suggestions.forEach(function(suggestion) {
+                            $('#suggestions-list').append('<li>' + suggestion + '</li>');
+                        });
+
+                        // Hide loading, show results
+                        $('#loading').hide();
+                        $('#results').show();
+                        $('#confidence-container').show();
+                    },
+                    error: function(error) {
+                        console.error('Error:', error);
+                        alert('An error occurred during prediction. Please try again.');
+                        $('#loading').hide();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+{% endblock %}

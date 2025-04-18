@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile - Crop Yield Prediction{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-8 col-sm-10">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-success text-white text-center">
+                    <h4 class="card-title mb-0">Profile Information</h4>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <div class="avatar-placeholder bg-light rounded-circle mx-auto mb-3">
+                            <i class="fas fa-user fa-3x text-success"></i>
+                        </div>
+                        <h5 class="mb-0">{{ user.name }}</h5>
+                        <p class="text-muted">{{ user.role|capitalize }}</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <span><i class="fas fa-envelope text-success me-2"></i> Email:</span>
+                            <span>{{ user.email }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <span><i class="fas fa-map-marker-alt text-success me-2"></i> Role:</span>
+                            <span>{{ user.role|capitalize }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <span><i class="fas fa-calendar-alt text-success me-2"></i> Joined:</span>
+                            <span>{{ user.created_at.strftime('%b %d, %Y') }}</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="d-grid">
+                        <a href="/dashboard" class="btn btn-outline-success">Go To Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .avatar-placeholder {
+        width: 100px;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin: 0 auto;
+    }
+
+    /* Add shadow effect on hover */
+    .card {
+        transition: all 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+</style>
+{% endblock %}

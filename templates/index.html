@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Crop Yield Prediction{% endblock %}
+
+{% block content %}
+<div class="hero-section bg-light text-center py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-lg-start">
+                <h1 class="display-4 fw-bold text-success mb-4">Crop Yield Prediction Using Hybrid Algorithms</h1>
+                <p class="lead mb-4">
+                    Leverage the power of Bidirectional Gated Recurrent Units (Bi-GRU) and XGBoost
+                    to make accurate crop yield predictions and optimize your farming strategies.
+                </p>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                    <a href="{{ url_for('register') }}" class="btn btn-success btn-lg px-4 me-md-2">Get Started</a>
+                    <a href="#features" class="btn btn-outline-success btn-lg px-4">Learn More</a>
+                </div>
+            </div>
+            <div class="col-lg-6 mt-5 mt-lg-0">
+                <img src="{{ url_for('static', filename='images/crop.png') }}" alt="Crop Yield Prediction" class="img-fluid rounded shadow-lg">
+            </div>
+        </div>
+    </div>
+</div>
+
+<section id="features" class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">How Our Hybrid Model Works</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-success bg-gradient text-white rounded-circle mb-3">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h5 class="card-title">Data Integration</h5>
+                        <p class="card-text">
+                            We combine historical weather patterns, soil data, and previous crop performance 
+                            to create comprehensive datasets for our prediction model.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-success bg-gradient text-white rounded-circle mb-3">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h5 class="card-title">Hybrid Algorithm</h5>
+                        <p class="card-text">
+                            Our unique approach combines Bi-GRU for temporal sequence analysis with
+                            XGBoost for enhanced prediction accuracy and robustness.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-success bg-gradient text-white rounded-circle mb-3">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h5 class="card-title">Actionable Insights</h5>
+                        <p class="card-text">
+                            Receive detailed predictions and recommendations to optimize planting schedules,
+                            resource allocation, and risk management strategies.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="bg-light py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="mb-4">Benefits for Farmers and Policymakers</h2>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        <strong>Improved Planning:</strong> Make data-driven decisions about crop selection and resource allocation
+                    </li>
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        <strong>Risk Mitigation:</strong> Identify potential yield issues early and implement preventative measures
+                    </li>
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        <strong>Resource Optimization:</strong> Allocate water, fertilizer, and labor more efficiently
+                    </li>
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        <strong>Sustainability:</strong> Reduce environmental impact while maximizing productivity
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-6 mt-4 mt-lg-0">
+                <div class="card border-0 shadow">
+                    <div class="card-body p-4">
+                        <h4 class="card-title text-center mb-4">Join Our Platform Today</h4>
+                        <p class="card-text text-center mb-4">
+                            Get access to cutting-edge prediction tools and start optimizing your crop yields
+                        </p>
+                        <div class="d-grid">
+                            <a href="{{ url_for('register') }}" class="btn btn-success btn-lg">Create An Account</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

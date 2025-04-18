@@ -1,0 +1,12 @@
+python --> 3.11.0
+
+TensorFlow == 2.18.0
+xgboost == 2.1.2
+scikit-learn == 1.5.2
+seaborn == 0.13.2
+matplotlib == 3.9.2
+joblib == 1.4.2
+flask == 3.1.0
+flask-mysqldb == 2.0.0
+numpy == 2.0.2
+pandas == 2.2.3
